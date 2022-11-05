@@ -1,45 +1,20 @@
-package cache
+package main
 
-import "errors"
+import (
+	"fmt"
+	cache "github.com/skorolevskiy/go-begginer/cache"
+)
 
-type Cache struct {
-	items map[string]Item
-}
+func main() {
+	cache := cache.New()
 
-type Item struct {
-	Value interface{}
-}
+	cache.Set("userId", 42)
+	userId, _ := cache.Get("userId")
 
-func New() *Cache {
-	items := make(map[string]Item)
+	fmt.Println(userId)
 
-	cache := Cache{
-		items: items,
-	}
+	cache.Delete("userId")
+	userId, _ = cache.Get("userId")
 
-	return &cache
-}
-
-func (c *Cache) Set(key string, value interface{}) {
-	c.items[key] = Item{
-		Value: value,
-	}
-}
-
-func (c *Cache) Get(key string) (interface{}, error) {
-	item, exists := c.items[key]
-	if !exists {
-		return nil, errors.New("cacheItem with such key doesn't exist")
-	}
-	return item.Value, nil
-}
-
-func (c *Cache) Delete(key string) error {
-	if _, found := c.items[key]; !found {
-		return errors.New("key not found")
-	}
-
-	delete(c.items, key)
-
-	return nil
+	fmt.Println(userId)
 }
