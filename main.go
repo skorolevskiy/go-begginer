@@ -2,19 +2,27 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"time"
+
 	cache "github.com/skorolevskiy/go-begginer/cache"
 )
 
 func main() {
 	cache := cache.New()
 
-	cache.Set("userId", 42)
-	userId, _ := cache.Get("userId")
+	cache.Set("userId", 42, time.Second*5)
+	userId, err := cache.Get("userId")
+	if err != nil { // err == nil
+		log.Fatal(err)
+	}
+	fmt.Println(userId) // Output: 42
 
-	fmt.Println(userId)
+	time.Sleep(time.Second * 6) // прошло 5 секунд
 
-	cache.Delete("userId")
-	userId, _ = cache.Get("userId")
-
-	fmt.Println(userId)
+	//userId = cache.Get("userId")
+	userId, err = cache.Get("userId")
+	if err != nil { // err != nil
+		log.Fatal(err) // сработает этот код
+	}
 }
